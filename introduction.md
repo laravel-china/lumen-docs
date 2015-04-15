@@ -1,4 +1,4 @@
-# Introduction
+# 介绍
 
 - [什么是 Lumen?](#what-is-lumen)
 - [在什么时候使用 Lumen?](#when-should-i-use-lumen)
