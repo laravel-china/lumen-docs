@@ -136,7 +136,7 @@ Lumen 会自动在每一位用户的 session 中放置随机的 token ，这个 
 
 #### X-CSRF-TOKEN
 
-除了寻找 CSRF token 作为「POST」参数，中间件也检查 X-XSRF-TOKEN 请求头，比如，你可以把 token 存放在 meta 标签中, 然后使用 jQuery 将它加入到所有的请求头中：
+除了寻找 CSRF token 作为「POST」参数，中间件也检查 `X-XSRF-TOKEN` 请求头，比如，你可以把 token 存放在 meta 标签中, 然后使用 jQuery 将它加入到所有的请求头中：
 
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
 
@@ -154,16 +154,16 @@ Lumen 会自动在每一位用户的 session 中放置随机的 token ，这个 
 
 #### X-XSRF-TOKEN
 
-Lumen 也在 cookie 中存放了名为 XSRF-TOKEN 的 CSRF token。你可以使用这个 cookie 值来设置 X-XSRF-TOKEN 请求头。一些 Javascript 框架，比如 Angular ，会自动设置这个值。
+Lumen 也在 cookie 中存放了名为 `XSRF-TOKEN` 的 CSRF token。你可以使用这个 cookie 值来设置 `X-XSRF-TOKEN` 请求头。一些 Javascript 框架，比如 Angular ，会自动设置这个值。
 
 > Note:  `X-CSRF-TOKEN` 和 `X-XSRF-TOKEN` 的不同点在于前者使用的是纯文本而后者是一个加密的值，因为在 Lumen 中 cookies 始终是被加密过的。如果你使用 `csrf_token()` 函数来作为 token 的值， 你需要设置 `X-CSRF-TOKEN` 请求头。
 
 <a name="method-spoofing"></a>
 ## 请求方法欺骗
 
-HTML 表单没有支持 PUT 、PATCH 或 DELETE 请求。所以当定义 PUT 、PATCH 以及 DELETE 路由并在 HTML 表单中被调用的时候，您将需要添加隐藏 _method 字段在表单中。
+HTML 表单没有支持 `PUT` 、`PATCH` 或 `DELETE` 请求。所以当定义 `PUT` 、`PATCH` 以及 `DELETE` 路由并在 HTML 表单中被调用的时候，您将需要添加隐藏 `_method` 字段在表单中。
 
-发送的 _method 字段对应的值会被当做 HTTP 请求方法。举例来说：
+发送的 `_method` 字段对应的值会被当做 HTTP 请求方法。举例来说：
 
 	<form action="/foo/bar" method="POST">
 		<input type="hidden" name="_method" value="PUT">
@@ -175,7 +175,7 @@ HTML 表单没有支持 PUT 、PATCH 或 DELETE 请求。所以当定义 PUT 、
 
 这里有两种方法从路由手动触发 404 错误。
 
-首先，您可以使用 abort 辅助函数：
+首先，您可以使用 `abort` 辅助函数：
 
 	abort(404);
 
