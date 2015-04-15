@@ -1,4 +1,4 @@
-# Installation
+# 安装
 
 - [安装 Composer](#install-composer)
 - [安装 Lumen](#install-lumen)

@@ -1,73 +1,76 @@
-# Configuration
+# 配置
 
-- [Introduction](#introduction)
-- [After Installation](#after-installation)
-- [Configuration Files](#configuration-files)
-- [Pretty URLs](#pretty-urls)
+- [介绍](#introduction)
+- [安装后的配置](#after-installation)
+- [配置文件](#configuration-files)
+- [优雅链接](#pretty-urls)
 
 <a name="introduction"></a>
-## Introduction
+## 介绍
 
-Unlike Laravel, Lumen only uses a single `.env` configuration file which can be used to configure the various aspects of the framework. The `.env.example` that ships with the framework can be used as a starting-point for your Lumen configuration.
 
-> **Note:** If you would like to use the `vlucas/phpdotenv` library to load your environment variables into the `$_ENV` PHP super-global, you should uncomment the call to `Dotenv::load` in your `bootstrap/app.php` file.
+与 Laravel 不同的是, Lumen 只使用单一的 `.env`  配置文件, 你阅读下 `.env.example` 文件, 看下有哪些选项需要配置.
+
+> **注意:** 如果你想要使用 `vlucas/phpdotenv` 库来加载你的环境变量, 请把 `bootstrap/app.php` 文件里面的 `Dotenv::load` 这个调用注释掉.
 
 <a name="after-installation"></a>
-## After Installation
+## 安装后的配置
 
-Lumen needs very little configuration out of the box. However, you should set your `APP_KEY` configuration option in the `.env` file. This value should be a 32 character, random string.
+Lumen 基本上不需要配置, 但是, 安装后的第一件事情是在 `.env` 文件里面设置你的 `APP_KEY`, 此值应该为随机的 32 位字符串.
 
-However, you may also want to configure a few additional components of Laravel, such as:
+你可以查看其他的文档, 如下:
 
-- [Cache](/docs/cache#configuration)
-- [Database](/docs/database#configuration)
-- [Queue](/docs/queues#configuration)
-- [Session](/docs/session#configuration)
+- [缓存](/docs/cache#configuration)
+- [数据库](/docs/database#configuration)
+- [队列](/docs/queues#configuration)
+- [会话](/docs/session#configuration)
 
-> **Note:** You should never have the `APP_DEBUG` configuration option set to `true` for a production application.
+
+> **注意:** 请注意千万不要在生产环境下把 `APP_DEBUG` 选项设置为 `true`。
 
 <a name="permissions"></a>
-### Permissions
+### 权限
 
-Laravel may require some permissions to be configured: folders within `storage` and the `bootstrap/cache` directory require write access by the web server.
+Lumen 框架有一个目录需要额外配置权限: `storage` 目录要让服务器有写入的权限。
 
 <a name="configuration-files"></a>
-## Configuration Files
+## 配置文件
 
-By default, Lumen uses a single `.env` file to configure your application. However, you may use full, "Laravel style" configuration files if you wish. The default configuration files are stored in `vendor/laravel/lumen-framework/config` directory. Lumen will use your copy of the configuration file if you copy and paste one of the files into a `config` directory within your project root.
+默认情况下, Lumen 使用单一的 `.env` 文件来配置你的应用, 然而, 你也可以使用 `Laravel 风格` 的配置方法。只需要把 `vendor/laravel/lumen-framework/config` 文件夹下对应的配置文件复制到根目录下的 `config` 文件里面就行. 
 
-Using full configuration files will give you more control over some aspects of Lumen's configuration, such as configuring multiple storage "disks" or read / write database connections.
+使用这种方法, 能有更多的配置灵活度. 
 
-#### Custom Configuration Files
+#### 自定义配置文件
 
-You may also create your own custom configuration files and load them using the `$app->configure()` method. For example, if your configuration file is located in `config/options.php`, you can load the file like so:
+你可以创建自定义的配置文件, 并使用 `$app->configure()` 方法进行加载. 
+
+举个栗子, 把自定义配置文件放置于 `config/options.php`, 可以这样加载:
 
 	$app->configure('options');
 
 <a name="pretty-urls"></a>
-## Pretty URLs
+
+## 优雅链接
 
 ### Apache
 
-The framework ships with a `public/.htaccess` file that is used to allow URLs without `index.php`. If you use Apache to serve your Laravel application, be sure to enable the `mod_rewrite` module.
+Lumen 框架通过 public/.htaccess 文件来让网址中不需要 index.php。如果你的网页服务器是使用 Apache 的话，请确认是否有开启 mod_rewrite 模块。
 
-If the `.htaccess` file that ships with Laravel does not work with your Apache installation, try this one:
+假设 Laravel 附带的 .htaccess 文件在 Apache 无法生效的话，请尝试下面的方法：
 
-	Options +FollowSymLinks
-	RewriteEngine On
+    Options +FollowSymLinks
+    RewriteEngine On
 
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^ index.php [L]
-
-If your web host doesn't allow the `FollowSymlinks` option, try replacing it with `Options +SymLinksIfOwnerMatch`.
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
 
 ### Nginx
 
-On Nginx, the following directive in your site configuration will allow "pretty" URLs:
+Nginx 上，在配置中增加下面的配置，就可以使用「优雅链接」了: 
 
-	location / {
-		try_files $uri $uri/ /index.php?$query_string;
-	}
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
 
-Of course, when using [Homestead](http://laravel.com/docs/homestead), pretty URLs will be configured automatically.
+当然，如果你使用 [Homestead](http://laravel.com/docs/homestead) 的话，优雅链接会自动的帮你配置完成。
