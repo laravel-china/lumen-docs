@@ -1,71 +1,69 @@
 # Installation
 
-- [Install Composer](#install-composer)
-- [Install Lumen](#install-lumen)
-- [Server Requirements](#server-requirements)
+- [安装 Composer](#install-composer)
+- [安装 Lumen](#install-lumen)
+- [环境需求](#server-requirements)
 
 <a name="install-composer"></a>
-## Install Composer
+## 安装 Composer
 
-Lumen utilizes [Composer](http://getcomposer.org) to manage its dependencies. So, before using Lumen, you will need to make sure you have Composer installed on your machine.
+Lumen 使用 [Composer](http://getcomposer.org) 来管理依赖扩展包, 所以, 在使用 Lumen 之前, 你需要先安装 Composer.
 
 <a name="install-lumen"></a>
-## Install Lumen
+## 安装 Lumen
 
-### Via Lumen Installer
+### 通过 Lumen 命令安装
 
-First, download the Lumen installer using Composer.
+首先, 使用下面命令下载 Lumen 命令: 
 
 	composer global require "laravel/lumen-installer=~1.0"
 
-Make sure to place the `~/.composer/vendor/bin` directory in your PATH so the `lumen` executable can be located by your system.
+请确定把 `~/.composer/vendor/bin` 路径放置于您的 PATH 里， 这样 Lumen 执行文件就会存在你的系统。
 
-Once installed, the simple `lumen new` command will create a fresh Lumen installation in the directory you specify. For instance, `lumen new service` would create a directory named `service` containing a fresh Lumen installation with all dependencies installed. This method of installation is much faster than installing via Composer:
+一旦安装完成后，就可以使用 `lumen new` 命令建立一份全新安装的 Lumen 应用，例如： `laravel new service` 将会在当前目录下建立一个名为 service 的目录， 此目录里面存放着全新安装的 Lumen 相关代码，此方法跟其他方法不一样的地方在于会提前安装好所有相关代码，不需要再通过 composer install 安装相关依赖，速度会快许多。
 
 	lumen new service
 
-### Via Composer Create-Project
+### 通过 Composer 创建项目命令
 
-You may also install Lumen by issuing the Composer `create-project` command in your terminal:
+你一样可以通过 Composer 在命令行执行 create-project 来安装 Lumen:
 
 	composer create-project laravel/lumen --prefer-dist
 
 <a name="server-requirements"></a>
-## Server Requirements
+## 环境需求
 
-The Lumen framework has a few system requirements:
+Lumen 框架有一些系统上的需求：
 
 - PHP >= 5.4
-- Mcrypt PHP Extension
-- OpenSSL PHP Extension
-- Mbstring PHP Extension
-- Tokenizer PHP Extension
+- Mcrypt PHP 扩展
+- OpenSSL PHP 扩展
+- Mbstring PHP 扩展
+- Tokenizer PHP 扩展
 
 <a name="configuration"></a>
-## Configuration
+## 配置信息
 
-Lumen needs almost no other configuration out of the box. You are free to get started developing!
+Lumen 几乎不需多余的配置就可以马上使用。你可以马上着手开发！然而，你可以查看其他的文档, 如下:
 
-You may also want to configure a few additional components of Lumen, such as:
-
-- [Cache](/docs/cache#configuration)
-- [Database](/docs/database#configuration)
-- [Queue](/docs/queues#configuration)
-- [Session](/docs/session#configuration)
+- [缓存](/docs/cache#configuration)
+- [数据库](/docs/database#configuration)
+- [队列](/docs/queues#configuration)
+- [会话](/docs/session#configuration)
 
 <a name="permissions"></a>
-### Permissions
+### 权限
 
-Lumen may require some permissions to be configured: folders within `storage` directory need to be writable.
+Lumen 框架有一个目录需要额外配置权限: `storage` 目录要让服务器有写入的权限。
 
 <a name="pretty-urls"></a>
-## Pretty URLs
+## 优雅链接
 
 ### Apache
 
-The framework ships with a `public/.htaccess` file that is used to allow URLs without `index.php`. If you use Apache to serve your Lumen application, be sure to enable the `mod_rewrite` module.
+Lumen 框架通过 public/.htaccess 文件来让网址中不需要 index.php。如果你的网页服务器是使用 Apache 的话，请确认是否有开启 mod_rewrite 模块。
 
-If the `.htaccess` file that ships with Lumen does not work with your Apache installation, try this one:
+假设 Laravel 附带的 .htaccess 文件在 Apache 无法生效的话，请尝试下面的方法：
 
 	Options +FollowSymLinks
 	RewriteEngine On
@@ -76,10 +74,10 @@ If the `.htaccess` file that ships with Lumen does not work with your Apache ins
 
 ### Nginx
 
-On Nginx, the following directive in your site configuration will allow "pretty" URLs:
+Nginx 上，在配置中增加下面的配置，就可以使用「优雅链接」了: 
 
 	location / {
 		try_files $uri $uri/ /index.php?$query_string;
 	}
 
-Of course, when using [Homestead](http://laravel.com/docs/homestead), pretty URLs will be configured automatically.
+当然，如果你使用 [Homestead](http://laravel.com/docs/homestead) 的话，优雅链接会自动的帮你配置完成。
