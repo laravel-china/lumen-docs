@@ -15,7 +15,7 @@
 		return 'Hello World';
 	});
 
-#### Creating Custom Responses
+#### 创建自定义回应
 
 但是以大部分的路由及控制器所执行的动作来说，你需要返回完整的 `Illuminate\Http\Response` 实例或是一个[视图](/docs/views)。返回一个完整的 `Response` 实例时，你能够自定义响应的 HTTP 状态码以及响应头。`Response` 实例继承了 `Symfony\Component\HttpFoundation\Response` 类，它提供了很多方法来建立 HTTP 响应。
 

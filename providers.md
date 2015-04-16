@@ -1,28 +1,28 @@
-# Service Providers
+# 服务提供者
 
-- [Introduction](#introduction)
-- [Basic Provider Example](#basic-provider-example)
-- [Registering Providers](#registering-providers)
+- [简介](#introduction)
+- [基本提供者例子](#basic-provider-example)
+- [注册提供者](#registering-providers)
 
 <a name="introduction"></a>
-## Introduction
+## 简介
 
-Service providers are the central place of all Lumen application bootstrapping. Your own application, as well as all of Lumen's core services are bootstrapped via service providers.
+服务提供者是所有 Lumen 应用程序的启动中心。你的应用程序，以及所有 Lumen 的核心服务，都是透过服务提供者启动。
 
-But, what do we mean by "bootstrapped"? In general, we mean **registering** things, including registering service container bindings and event listeners. Service providers are the central place to configure your application.
+但我们所说的「启动」指的是什么？一般而言，我们指**注册**事物，包括注册服务容器绑定、事件监听器、过滤器，甚至路由。服务提供者是你的应用程序配置中心所在。
 
-If you open the `bootstrap/app.php` file included with Lumen, you will see a call to `$app->register()`. You may add additional calls to this method to register additional service providers.
+如果你打开包含于 Lumen 中的 `bootstrap/app.php` 这一文件，你会看到 `$app->register()` 的方法调用。你也可以通过调用这个方法来注册额外的服务提供者。
 
-In this overview you will learn how to write your own service providers and register them with your Lumen application.
+在这份概述中，你会学到如何编写你自己的服务提供者，并将它们注册于你的 Lumen 应用程序。
 
 <a name="basic-provider-example"></a>
-## Basic Provider Example
+## 基本提供者例子
 
-All service providers extend the `Illuminate\Support\ServiceProvider` class. This abstract class requires that you define at least one method on your provider: `register`.
+所有的服务提供者都应继承 `Illuminate\Support\ServiceProvider` 此一类。在这个抽象类中，至少必须定义一个方法： `register` 。
 
-### The Register Method
+### 注册者方法
 
-Now, let's take a look at a basic service provider:
+现在，让我们来看看基本的服务提供者：
 
 	<?php namespace App\Providers;
 
@@ -32,7 +32,7 @@ Now, let's take a look at a basic service provider:
 	class RiakServiceProvider extends ServiceProvider {
 
 		/**
-		 * Register bindings in the container.
+		 * 在容器中注册绑定。
 		 *
 		 * @return void
 		 */
@@ -45,15 +45,16 @@ Now, let's take a look at a basic service provider:
 
 	}
 
-This service provider only defines a `register` method, and uses that method to define an implementation of `Riak\Contracts\Connection` in the service container. If you don't understand how the service container works, don't worry, [we'll cover that soon](/docs/container).
+这个服务提供者只定义了一个 `register` 方法，并在服务容器中使用此方法定义了一份 `Riak\Contracts\Connection` 的实现。若你还不了解服务容器是如何运作的，不用担心，[我们很快会提到它](/docs/5.0/container)。
 
-This class is namespaced under `App\Providers` since that is the default location for service providers in Laravel. However, you are free to change this as you wish. Your service providers may be placed anywhere that Composer can autoload them.
+此类位于 `App\Providers` 命名空间之下，因为这是 Laravel 中默认服务提供者所在的位置。然而，你可以随自己的需要改变它。你的服务提供者可被置于任何 Composer 能自动加载的位置。
+
 
 <a name="registering-providers"></a>
-## Registering Providers
+## 注册提供者
 
-All service providers are registered in the `bootstrap/app.php` bootstrap file. This file contains a sample call to `$app->register()`.
+所有的服务提供者都在 `bootstrap/app.php` 文件里面注册, 此文件包含了一个简单的调用 `$app->register()`. 
 
-To register your provider, simply add another call to this method:
+如果你想注册自定义的服务提供者, 请使用: 
 
 	$app->register('App\Providers\YourServiceProvider');
