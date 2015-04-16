@@ -1,19 +1,19 @@
-# HTTP Controllers
+# HTTP 控制器
 
-- [Introduction](#introduction)
-- [Basic Controllers](#basic-controllers)
-- [Controller Middleware](#controller-middleware)
-- [Dependency Injection & Controllers](#dependency-injection-and-controllers)
+- [介绍](#introduction)
+- [基础控制器](#basic-controllers)
+- [控制器中间件](#controller-middleware)
+- [依赖注入和控制器](#dependency-injection-and-controllers)
 
 <a name="introduction"></a>
-## Introduction
+## 介绍
 
-Instead of defining all of your request handling logic in a single `routes.php` file, you may wish to organize this behavior using Controller classes. Controllers can group related HTTP request handling logic into a class. Controllers are typically stored in the `app/Http/Controllers` directory.
+除了在单一的 `routes.php` 文件中定义所有的请求处理逻辑之外，你可能希望使用控制器类来组织此行为。控制器可将相关的 HTTP 请求处理逻辑组成一个类。控制器通常存放在 `app/Http/Controllers` 此目录中。
 
 <a name="basic-controllers"></a>
-## Basic Controllers
+## 基础控制器
 
-Here is an example of a basic controller class:
+这里是一个基础控制器类的例子: 
 
 	<?php namespace App\Http\Controllers;
 
@@ -35,37 +35,37 @@ Here is an example of a basic controller class:
 
 	}
 
-We can route to the controller action like so:
+我们可以通过如下方式引导路由至对应的控制器动作：
 
 	$app->get('user/{id}', 'App\Http\Controllers\UserController@showProfile');
 
-> **Note:** All controllers should extend the base `App\Http\Controllers\Controller` class.
+> **Note:**  所有的控制器都应该扩展 `App\Http\Controllers\Controller` 基础控制器类.
 
-#### Naming Controller Routes
+#### 控制器和命名空间
 
-Like Closure routes, you may specify names on controller routes:
+和闭包路由一样，你也可以指定控制器路由的名称。
 
 	$app->get('foo', ['uses' => 'App\Http\Controllers\FooController@method', 'as' => 'name']);
 
-These names can be used to generate URLs to the controller actions:
+命名路由可以用以下方法来生成 URL : 
 
 	$url = route('name');
 
-If the route has parameters, you may specify them like so:
+带参数的命名路由: 
 
 	$url = route('name', ['id' => 1]);
 
 <a name="controller-middleware"></a>
-## Controller Middleware
+## 控制器中间件
 
-[Middleware](/docs/middleware) may be specified on controller routes like so:
+[中间件](/docs/middleware) 可在控制器路由中指定，例如：
 
 	$app->get('profile', [
 		'middleware' => 'auth',
 		'uses' => 'App\Http\Controllers\UserController@showProfile'
 	]);
 
-Additionally, you may specify middleware within your controller's constructor:
+你也可以在控制器构造器中指定中间件 ：
 
 	class UserController extends Controller {
 
@@ -84,11 +84,11 @@ Additionally, you may specify middleware within your controller's constructor:
 	}
 
 <a name="dependency-injection-and-controllers"></a>
-## Dependency Injection & Controllers
+## 依赖注入和控制器
 
-#### Constructor Injection
+#### 构造器注入
 
-The Lumen / Laravel [service container](/docs/container) is used to resolve all controllers. As a result, you are able to type-hint any dependencies your controller may need in its constructor:
+Lumen / Laravel [服务容器](/docs/container) 用于解析所有的 Laravel 控制器。因此，你可以在控制器所需要的构造器中，对依赖作任何的类型限制。
 
 	<?php namespace App\Http\Controllers;
 
@@ -115,9 +115,9 @@ The Lumen / Laravel [service container](/docs/container) is used to resolve all 
 
 	}
 
-#### Method Injection
+#### 方法注入
 
-In addition to constructor injection, you may also type-hint dependencies on your controller's methods. For example, let's type-hint the `Request` instance on one of our methods:
+除了建构器注入外，你也可以对控制器方法的依赖作类型限制。例如，让我们对某个方法的 `Request` 实例作类型限制：
 
 	<?php namespace App\Http\Controllers;
 
@@ -127,7 +127,7 @@ In addition to constructor injection, you may also type-hint dependencies on you
 	class UserController extends Controller {
 
 		/**
-		 * Store a new user.
+		 * 保存用户.
 		 *
 		 * @param  Request  $request
 		 * @return Response
@@ -141,7 +141,7 @@ In addition to constructor injection, you may also type-hint dependencies on you
 
 	}
 
-If your controller method is also expecting input from a route parameter, simply list your route arguments after your other dependencies:
+如果你的控制器方法预期由路由参数取得输入，只要在其他的依赖之后列出路由参数即可：
 
 	<?php namespace App\Http\Controllers;
 
@@ -151,7 +151,7 @@ If your controller method is also expecting input from a route parameter, simply
 	class UserController extends Controller {
 
 		/**
-		 * Store a new user.
+		 * 保存用户.
 		 *
 		 * @param  Request  $request
 		 * @param  int  $id
