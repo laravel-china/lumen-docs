@@ -1,55 +1,56 @@
-# Service Container
+# 服务容器
 
-- [Introduction](#introduction)
-- [Basic Usage](#basic-usage)
-- [Binding Interfaces To Implementations](#binding-interfaces-to-implementations)
-- [Contextual Binding](#contextual-binding)
-- [Tagging](#tagging)
-- [Container Events](#container-events)
+- [介绍](#introduction)
+- [基本用法](#basic-usage)
+- [绑定实例的接口](#binding-interfaces-to-implementations)
+- [上下文绑定](#contextual-binding)
+- [标签](#tagging)
+- [容器事件](#container-events)
 
 <a name="introduction"></a>
-## Introduction
+## 介绍
 
-Lumen utilizes the powerful Laravel service container, which is an amazing tool for managing class dependencies. Dependency injection is a fancy word that essentially means this: class dependencies are "injected" into the class via the constructor or, in some cases, "setter" methods.
+Lumen 服务容器是管理类依赖的强力工具。依赖注入是比较专业的说法，真正意思是将类依赖透过构造器或 「setter」 方法注入。
 
 <a name="basic-usage"></a>
-## Basic Usage
+##  基本用法
 
-> **Note:** To better organize your container bindings, consider placing them in [service providers](/docs/providers).
+> **Note:** 为了保证程序的整洁, 建议放置于 [服务提供者](/docs/providers) 里面.
 
-#### Registering A Basic Resolver
+#### 注册基本解析器
 
-There are several ways the service container can register dependencies, including Closure callbacks and binding interfaces to implementations. First, we'll explore Closure callbacks. A Closure resolver is registered in the container with a key (typically the class name) and a Closure that returns some value:
+服务容器注册依赖有几种方式，包括闭包回调和绑定实例的接口。首先，我们来探讨闭包回调的方式。被注册至容器的闭包解析器包含一个 key (通常用类名称) 和一个有返回值的闭包:
 
 	$app->bind('FooBar', function($app) {
 		return new FooBar($app['SomethingElse']);
 	});
 
-#### Registering A Singleton
+#### 注册一个单例
 
-Sometimes, you may wish to bind something into the container that should only be resolved once, and the same instance should be returned on subsequent calls into the container:
+有时候，你可能希望绑定到容器的对象只会被解析一次，之后的调用都返回相同的实例：
 
 	$app->singleton('FooBar', function($app) {
 		return new FooBar($app['SomethingElse']);
 	});
 
-#### Binding An Existing Instance Into The Container
+#### 绑定一个已经存在的实例
 
-You may also bind an existing object instance into the container using the `instance` method. The given instance will always be returned on subsequent calls into the container:
+你也可以使用 `instance` 方法，绑定一个已经存在的实例到容器，接下来将总是返回该实例：
 
 	$fooBar = new FooBar(new SomethingElse);
 
 	$app->instance('FooBar', $fooBar);
 
-### Resolving
+### 解析
 
-There are several ways to resolve something out of the container. First, you may use the `make` method:
+从容器解析出实例有几种方式。  
+一、可以使用 `make` 方法：
 
 	$fooBar = $app->make('FooBar');
 
-#### Automatic Resolution
+#### 自动解析
 
-Secondly, but importantly, you may simply "type-hint" the dependency in the constructor of a class that is resolved by the container, including controllers, event listeners, queue jobs, and more. The container will automatically inject the dependencies:
+二、你可以在构造函数中简单地「类型指定（type-hint）」你所需要的依赖，包括在控制器、事件监听器、队列任务，过滤器等等之中。容器将自动注入你所需的所有依赖：
 
 	<?php namespace App\Http\Controllers;
 
@@ -88,13 +89,15 @@ Secondly, but importantly, you may simply "type-hint" the dependency in the cons
 	}
 
 <a name="binding-interfaces-to-implementations"></a>
-## Binding Interfaces To Implementations
+## 将接口绑定到实现
 
-A very powerful feature of the service container is its ability to bind an interface to a given implementation. For example, perhaps our application integrates with the [Pusher](https://pusher.com) web service for sending and receiving real-time events. If we are using Pusher's PHP SDK, we could inject an instance of the Pusher client into a class. First, let's register a binding for the SDK that binds it to an interface:
+服务容器有个非常强大特色，能够绑定特定实例的接口。举例，假设我们应用程序要集成 [Pusher](https://pusher.com) 服务去收发即时事件，如果使用 Pusher 的 PHP SDK，可以在类注入一个 Pusher 客户端实例. 
+
+可以在服务容器像这样注册它：
 
 	$app->bind('App\Contracts\EventPusher', 'App\Services\PusherEventPusher');
 
-This tells the container that it should inject the `PusherEventPusher` when a class needs an implementation of `EventPusher`. Now we can type-hint the `EventPusher` interface in our constructor:
+当有类需要 `EventPusher` 接口时，会告诉容器应该注入 `PusherEventPusher`，现在就可以在构造器中「类型指定」一个 `EventPusher` 接口：
 
 		/**
 		 * Create a new order handler instance.
@@ -108,18 +111,18 @@ This tells the container that it should inject the `PusherEventPusher` when a cl
 		}
 
 <a name="contextual-binding"></a>
-## Contextual Binding
+##  上下文绑定
 
-Sometimes you may have two classes that utilize the same interface, but you wish to inject different implementations into each class. For example, when our system receives a new Order, we may want to send an event via [PubNub](http://www.pubnub.com/) rather than Pusher. Lumen provides a simple, fluent interface for defining this behavior:
+有时候，你可能会有两个类需要用到同一个接口，但是你希望为每个类注入不同的接口实现。例如当我们的系统收到一个新的订单时，我们需要使用 [PubNub](http://www.pubnub.com/) 来代替 Pusher 发送消息。Lumen 提供了一个简单便利的接口来定义以上的行为：
 
 	$app->when('App\Service\CreateOrder')
 	          ->needs('App\Contracts\EventPusher')
 	          ->give('App\Services\PubNubEventPusher');
 
 <a name="tagging"></a>
-## Tagging
+## 标签
 
-Occasionally, you may need to resolve all of a certain "category" of binding. For example, perhaps you are building a report aggregator that receives an array of many different `Report` interface implementations. After registering the `Report` implementations, you can assign them a tag using the `tag` method:
+偶尔你可能需要解析绑定中的某个「类」。例如你正在建设一个汇总报表，它需要接收实现了 `Report` 接口的不同实现的数组。在注册了 `Report` 的这些实现之后，你可以用 `tag` 方法来给他们赋予一个标签：
 
 	$app->bind('SpeedReport', function() {
 		//
@@ -131,18 +134,18 @@ Occasionally, you may need to resolve all of a certain "category" of binding. Fo
 
 	$app->tag(['SpeedReport', 'MemoryReport'], 'reports');
 
-Once the services have been tagged, you may easily resolve them all via the `tagged` method:
+一旦服务打上标签，可以通过 `tagged` 方法轻易地解析它们：
 
 	$app->bind('ReportAggregator', function($app) {
 		return new ReportAggregator($app->tagged('reports'));
 	});
 
 <a name="container-events"></a>
-## Container Events
+## 容器事件
 
-#### Registering A Resolving Listener
+#### 注册一个解析事件监听器
 
-The container fires an event each time it resolves an object. You may listen to this event using the `resolving` method:
+容器在解析每一个对象时就会触发一个事件。你可以用 `resolving` 方法来监听此事件：
 
 	$app->resolving(function($object, $app) {
 		// Called when container resolves object of any type...
@@ -152,4 +155,4 @@ The container fires an event each time it resolves an object. You may listen to 
 		// Called when container resolves objects of type "FooBar"...
 	});
 
-The object being resolved will be passed to the callback.
+被解析的对象将被传入到闭包方法中。
