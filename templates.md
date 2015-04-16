@@ -1,14 +1,14 @@
 # Templates
 
-- [Blade Templating](#blade-templating)
-- [Other Blade Control Structures](#other-blade-control-structures)
+- [Blade 模版](#blade-templating)
+- [其他 Blade 控制语法结构](#other-blade-control-structures)
 
 <a name="blade-templating"></a>
-## Blade Templating
+## Blade 模板
 
-Blade is a simple, yet powerful templating engine provided with Laravel, and it's even available in Lumen. Blade is driven by _template inheritance_ and _sections_. All Blade templates should use the `.blade.php` extension.
+Blade 是 Laravel 所提供的一个简单却又非常强大的模板引擎。不像控制器页面布局，Blade 是使用 _模板继承_(template inheritance) 和 _区块_(sections)。所有的 Blade 模板后缀名都要命名为 `.blade.php`。
 
-#### Defining A Blade Layout
+#### 定义一个 Blade 页面布局
 
 	<!-- Stored in resources/views/layouts/master.blade.php -->
 
@@ -27,7 +27,7 @@ Blade is a simple, yet powerful templating engine provided with Laravel, and it'
 		</body>
 	</html>
 
-#### Using A Blade Layout
+#### 在视图模板中使用 Blade 页面布局
 
 	@extends('layouts.master')
 
@@ -43,44 +43,44 @@ Blade is a simple, yet powerful templating engine provided with Laravel, and it'
 		<p>This is my body content.</p>
 	@stop
 
-Note that views which `extend` a Blade layout simply override sections from the layout. Content of the layout can be included in a child view using the `@@parent` directive in a section, allowing you to append to the contents of a layout section such as a sidebar or footer.
+请注意 如果视图 `继承(extend)` 了一个 Blade 页面布局会将页面布局中定义的区块用视图的所定义的区块重写。如果想要将页面布局中的区块内容也能在继承此布局的视图中呈现，那就要在区块中使用 `@@parent` 语法指令，通过这种方式可以把内容附加到页面布局中，我们会在侧边栏区块或者页脚区块看到类似的使用。
 
-Sometimes, such as when you are not sure if a section has been defined, you may wish to pass a default value to the `@yield` directive. You may pass the default value as the second argument:
+有时候，如您不确定这个区块内容有没有被定义，您可能会想要传一个默认的值给 @yield。您可以传入第二个参数作为默认值给 @yield：
 
 	@yield('section', 'Default Content')
 
 <a name="other-blade-control-structures"></a>
-## Other Blade Control Structures
+## 其他 Blade 控制语法结构
 
-#### Echoing Data
+#### 在 Blade 视图中打印（Echoing）数据
 
 	Hello, {{ $name }}.
 
 	The current UNIX timestamp is {{ time() }}.
 
-#### Echoing Data After Checking For Existence
+#### 检查数据是否存在后再打印数据
 
-Sometimes you may wish to echo a variable, but you aren't sure if the variable has been set. Basically, you want to do this:
+有时候您想要打印一个变量，但您不确定这个变量是否存在，通常情况下，您会想要这样写：
 
 	{{ isset($name) ? $name : 'Default' }}
 
-However, instead of writing a ternary statement, Blade allows you to use the following convenient short-cut:
+然而，除了写这种三元运算符语法之外，Blade 让您可以使用下面这种更简便的语法：
 
 	{{ $name or 'Default' }}
 
-#### Displaying Raw Text With Curly Braces
+#### 使用花括号显示文字
 
-If you need to display a string that is wrapped in curly braces, you may escape the Blade behavior by prefixing your text with an `@` symbol:
+如果您需要显示的一个字符串刚好被花括号包起来，您可以在花括号之前加上 @ 符号前缀来跳出 Blade 引擎的解析：
 
 	@{{ This will not be processed by Blade }}
 
-If you don't want the data to be escaped, you may use the following syntax:
+如果您不想数据被转义, 也可以使用如下语法：
 
 	Hello, {!! $name !!}.
 
-> **Note:** Be very careful when echoing content that is supplied by users of your application. Always use the double curly brace syntax to escape any HTML entities in the content.
+> **特别注意:** 在您的应用程序打印用户所提供的内容时要非常小心。请记得永远使用双重花括号来转义内容中的 HTML 实体字符串。
 
-#### If Statements
+#### If 声明
 
 	@if (count($records) === 1)
 		I have one record!
@@ -94,7 +94,7 @@ If you don't want the data to be escaped, you may use the following syntax:
 		You are not signed in.
 	@endunless
 
-#### Loops
+#### 循环
 
 	@for ($i = 0; $i < 10; $i++)
 		The current value is {{ $i }}
@@ -114,17 +114,17 @@ If you don't want the data to be escaped, you may use the following syntax:
 		<p>I'm looping forever.</p>
 	@endwhile
 
-#### Including Sub-Views
+#### 加载子视图
 
 	@include('view.name')
 
-You may also pass an array of data to the included view:
+您也可以通过传入数组的形式将数据传递给加载的子视图：
 
 	@include('view.name', ['some' => 'data'])
 
-#### Overwriting Sections
+#### 重写区块
 
-To overwrite a section entirely, you may use the `overwrite` statement:
+如果想要重写掉前面区块中的内容，您可以使用 `overwrite` 声明：
 
 	@extends('list.item.container')
 
@@ -132,12 +132,12 @@ To overwrite a section entirely, you may use the `overwrite` statement:
 		<p>This is an item of type {{ $item->type }}</p>
 	@overwrite
 
-#### Displaying Language Lines
+#### 显示语言行
 
 	@lang('language.line')
 
 	@choice('language.line', 1)
 
-#### Comments
+#### 注释
 
 	{{-- This comment will not be in the rendered HTML --}}
