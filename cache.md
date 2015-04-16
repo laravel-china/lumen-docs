@@ -1,12 +1,13 @@
-# Cache
 
-- [Configuration](#configuration)
-- [Basic Usage](#basic-usage)
+# 缓存
+
+- [配置](#configuration)
+- [基本使用](#basic-usage)
 
 <a name="configuration"></a>
-## Configuration
+## 配置
 
-The `CACHE_DRIVER` option in your `.env` file determines the cache "driver" to be used for the application. Of course, Lumen supports the same drivers as the full-stack Laravel framework, including Memcached and Redis:
+在 `.env` 文件中, 有个  `CACHE_DRIVER`  的选项, 用来配置使用哪个类型的缓存, Lumen 支持以下的几种: 
 
 - `array`
 - `file`
@@ -14,19 +15,19 @@ The `CACHE_DRIVER` option in your `.env` file determines the cache "driver" to b
 - `redis`
 - `database`
 
-> **Note:** If you are using the `.env` file to configure your application, don't forget to uncomment the `Dotenv::load()` method in your `bootstrap/app.php` file.
+> **Note:** 如果你需要使用 `.env` 来管理你的配置信息的话, 请在 `bootstrap/app.php` 文件里面把这一行去掉注释 `Dotenv::load()`.
 
 ### Memcached
 
-If you are using the Memcached driver, you may also set the `MEMCACHED_HOST` and `MEMCACHED_PORT` options in your `.env` configuration file.
+如果你想使用 Memcached 缓存的话, 请在 `.env` 文件里面设置这两个选项  `MEMCACHED_HOST` 和 `MEMCACHED_PORT` .
 
 ### Redis
 
-Before using a Redis cache with Laravel, you will need to install the `predis/predis` package (~1.0) via Composer.
+如果你想使用 Redis 缓存的话, 你需要通过 composer 安装 `predis/predis` package (~1.0) 扩展包. 
 
 ### Database
 
-When using the database cache driver, you will need to setup a table to contain the cache items. You'll find an example Schema declaration for the table below:
+如果你打算用数据库作为缓存的话, 你需要配置好数据库表后才能使用, 下面是表结构: 
 
 	Schema::create('cache', function($table) {
 	    $table->string('key')->unique();
@@ -35,66 +36,66 @@ When using the database cache driver, you will need to setup a table to contain 
 	});
 
 <a name="basic-usage"></a>
-## Basic Usage
+## 基础使用
 
-> **Note:** If you intend to use the `Cache` facade, be sure to uncomment the `$app->withFacades()` call in your `bootstrap/app.php` file.
+> **Note:** 如果你想使用 `Cache` 的话, 请在 `bootstrap/app.php` 文件中把 `$app->withFacades()` 这一行去掉注释.
 
-#### Storing An Item In The Cache
+#### 保存
 
 	Cache::put('key', 'value', $minutes);
 
-#### Using Carbon Objects To Set Expire Time
+#### 使用 Carbon 来设置过期时间
 
 	$expiresAt = Carbon::now()->addMinutes(10);
 
 	Cache::put('key', 'value', $expiresAt);
 
-#### Storing An Item In The Cache If It Doesn't Exist
+#### 如果不存在的话再保存
 
 	Cache::add('key', 'value', $minutes);
 
-The `add` method will return `true` if the item is actually **added** to the cache. Otherwise, the method will return `false`.
+此 `add` 会返回是否加入 Cache 的反馈, 如果增加成功的话, 会返回 `true`, 否则 `false`. 
 
-#### Checking For Existence In Cache
+#### 检查是否存在
 
 	if (Cache::has('key')) {
 		//
 	}
 
-#### Retrieving An Item From The Cache
+#### 读取
 
 	$value = Cache::get('key');
 
-#### Retrieving An Item Or Returning A Default Value
+#### 读取如果不存在的话返回默认值
 
 	$value = Cache::get('key', 'default');
 
 	$value = Cache::get('key', function() { return 'default'; });
 
-#### Storing An Item In The Cache Permanently
+#### 永久性存储一份数据
 
 	Cache::forever('key', 'value');
 
-Sometimes you may wish to retrieve an item from the cache, but also store a default value if the requested item doesn't exist. You may do this using the `Cache::remember` method:
+有时候您会希望从缓存中取得对象，而当此对象不存在时会保存一个默认值，您可以使用 `Cache::remember` 方法：
 
 	$value = Cache::remember('users', $minutes, function() {
 		return DB::table('users')->get();
 	});
 
-You may also combine the `remember` and `forever` methods:
+您也可以结合 `remember` 和 `forever` 方法：
 
 	$value = Cache::rememberForever('users', function() {
 		return DB::table('users')->get();
 	});
 
-Note that all items stored in the cache are serialized, so you are free to store any type of data.
+请注意所有保存在缓存中的对象皆会被序列化，所以您可以任意保存各种类型的数据。
 
-#### Pulling An Item From The Cache
+#### 从缓存拉出对象
 
-If you need to retrieve an item from the cache and then delete it, you may use the `pull` method:
+如果您需要从缓存中取得对象后将它删除，您可以使用 `pull` 方法：
 
 	$value = Cache::pull('key');
 
-#### Removing An Item From The Cache
+#### 从缓存中删除对象
 
 	Cache::forget('key');
