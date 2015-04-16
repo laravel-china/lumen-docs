@@ -1,106 +1,107 @@
-# Session
+# 会话
 
-- [Configuration](#configuration)
-- [Session Usage](#session-usage)
-- [Flash Data](#flash-data)
-- [Database Sessions](#database-sessions)
-- [Session Drivers](#session-drivers)
+- [配置](#configuration)
+- [使用 Session](#session-usage)
+- [暂存数据（Flash Data）](#flash-data)
+- [数据库 Sessions](#database-sessions)
+- [Session 驱动](#session-drivers)
 
 <a name="configuration"></a>
-## Configuration
+## 配置
 
-Since HTTP driven applications are stateless, sessions provide a way to store information about the user across requests. Lumen, like Laravel, ships with a variety of session back-ends available for use through a clean, unified API. Support for popular back-ends such as [Memcached](http://memcached.org), [Redis](http://redis.io), and databases is included out of the box.
+由于 HTTP 协定是无状态（Stateless）的，所以 session 提供一种保存用户数据的方法。Laravel 支持了多种 session 后端驱动，并通过清楚、统一的 API 提供使用。也内置支持如 [Memcached](http://memcached.org)、[Redis](http://redis.io) 和数据库的后端驱动。
 
-The session driver is controlled by the `SESSION_DRIVER` configuration option in your `.env` file. By default, Lumen is configured to use the `memcached` session driver, which will work well for the majority of applications.
+在 `.env` 文件里的 `SESSION_DRIVER`  选项可以来控制会话的驱动器, 默认情况下 Lumen 使用 `memcached` 作为缓存驱动器. 
 
-> **Note:** If you are using the `.env` file to configure your application, don't forget to uncomment the `Dotenv::load()` method in your `bootstrap/app.php` file.
+> **Note:** 请把 `bootstrap/app.php` 文件里面的 `Dotenv::load` 这个调用注释掉, 如果你想使用 `.env` 文件的话.
 
-Before using Redis sessions with Lumen, you will need to install the `predis/predis` package (~1.0) via Composer.
+如果你想使用 redit 作为你的驱动器的话, 请使用 composer 安装 `predis/predis` 扩展包版本 (~1.0).
 
-#### Reserved Keys
+#### 保留键值
 
-The Lumen framework uses the `flash` session key internally, so you should not add an item to the session by that name.
+Lumen 框架在内部有使用 `flash` 作为 session 的键值，所以应该避免 session 使用此名称。
 
 <a name="session-usage"></a>
-## Session Usage
+## 使用
 
-#### Enabling The Session
+#### 开启会话功能
 
-> **Note:** Before using sessions, you must uncomment the middleware within the `$app->middleware()` method call in your `bootstrap/app.php` file.
+> **Note:** 你需要把 `bootstrap/app.php` 文件里面的 `$app->middleware()`去掉注释, 才能使用此功能.
 
-#### Accessing The Session
+#### 获取会话实例
 
-The session may be accessed in several ways, via the HTTP request's `session` method, the `Session` facade, or the `session` helper function. When the `session` helper is called without arguments, it will return the entire session object. For example:
+有好几种方法可以获取到会话的实例, 一种是 HTTP 请求的 `session` 方法, 一种是 `Session` facade, 另一种是 `session` 辅助函数, 当 `session` 在被调用的时候没有传入任何参数, 会返回整个会话实例, 如下: 
 
 	session()->regenerate();
 
-#### Storing An Item In The Session
+#### 保存对象到 Session 中
 
 	Session::put('key', 'value');
 
 	session(['key' => 'value']);
 
-#### Push A Value Onto An Array Session Value
+#### 保存对象进 Session 数组值中
 
 	Session::push('user.teams', 'developers');
 
-#### Retrieving An Item From The Session
+#### 从 Session 取回对象
 
 	$value = Session::get('key');
 
 	$value = session('key');
 
-#### Retrieving An Item Or Returning A Default Value
+#### 从 Session 取回对象，若无则返回默认值
 
 	$value = Session::get('key', 'default');
 
 	$value = Session::get('key', function() { return 'default'; });
 
-#### Retrieving An Item And Forgetting It
+#### 从 Session 取回对象，并删除
 
 	$value = Session::pull('key', 'default');
 
-#### Retrieving All Data From The Session
+#### 从 Session 取出所有对象
 
 	$data = Session::all();
 
-#### Determining If An Item Exists In The Session
+#### 判断对象在 Session 中是否存在
 
-	if (Session::has('users')) {
+	if (Session::has('users'))
+	{
 		//
 	}
 
-#### Removing An Item From The Session
+#### 从 Session 中移除对象
 
 	Session::forget('key');
 
-#### Removing All Items From The Session
+#### 清空所有 Session
 
 	Session::flush();
 
-#### Regenerating The Session ID
+#### 重新产生 Session ID
 
 	Session::regenerate();
 
 <a name="flash-data"></a>
-## Flash Data
+## 暂存数据（Flash Data）
 
-Sometimes you may wish to store items in the session only for the next request. You may do so using the `Session::flash` method:
+有时你可能希望暂存一些数据，并只在下次请求有效。你可以使用 `Session::flash` 方法来达成目的：
 
 	Session::flash('key', 'value');
 
-#### Reflashing The Current Flash Data For Another Request
+#### 刷新当前暂存数据，延长到下次请求
 
 	Session::reflash();
 
-#### Reflashing Only A Subset Of Flash Data
+#### 只刷新指定快闪数据
 
 	Session::keep(['username', 'email']);
 
 <a name="database-sessions"></a>
-## Database Sessions
+## 数据库 Sessions
 
-When using the `database` session driver, you will need to setup a table to contain the session items. Below is an example `Schema` declaration for the table:
+当使用 `database` session 驱动时，你必需建置一张保存 session 的数据表。下方例子使用 `Schema` 来建表：
 
 	Schema::create('sessions', function($table)
 	{
@@ -110,12 +111,14 @@ When using the `database` session driver, you will need to setup a table to cont
 	});
 
 <a name="session-drivers"></a>
-## Session Drivers
+## Session 驱动
 
-The session "driver" defines where session data will be stored for each request. Lumen, like Laravel, ships with several great drivers out of the box:
+session 配置文件中的「driver」定义了 session Lumen 提供了许多良好的驱动：
 
-- `file` - sessions will be stored in `storage/framework/sessions`.
-- `cookie` - sessions will be stored in secure, encrypted cookies.
-- `database` - sessions will be stored in a database used by your application.
-- `memcached` / `redis` - sessions will be stored in one of these fast, cached based stores.
-- `array` - sessions will be stored in a simple PHP array and will not be persisted across requests.
+- `file` - sessions 将保存在 `storage/framework/sessions`。
+- `cookie` - sessions 将安全保存在加密的 cookies 中。
+- `database` - sessions 将保存在你的应用程序数据库中。
+- `memcached` / `redis` - sessions 将保存在一个高速缓存的系统中。
+- `array` - sessions 将单纯的以 PHP 数组保存，只存活在当次请求。
+
+> **注意：** array 驱动典型应用在 [unit tests](/docs/5.0/testing) 环境下，所以不会留下任何 session 数据。
