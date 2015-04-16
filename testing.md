@@ -1,27 +1,28 @@
-# Testing
+# 测试
 
-- [Introduction](#introduction)
-- [Defining & Running Tests](#defining-and-running-tests)
-- [Test Environment](#test-environment)
-- [Calling Routes From Tests](#calling-routes-from-tests)
-- [Mocking Facades](#mocking-facades)
-- [Framework Assertions](#framework-assertions)
-- [Helper Methods](#helper-methods)
-- [Refreshing The Application](#refreshing-the-application)
+- [介绍](#introduction)
+- [定义并执行测试](#defining-and-running-tests)
+- [测试环境](#test-environment)
+- [从测试调用路由](#calling-routes-from-tests)
+- [模拟 Facades](#mocking-facades)
+- [框架 Assertions](#framework-assertions)
+- [辅助方法](#helper-methods)
+- [重置应用程序](#refreshing-the-application)
 
 <a name="introduction"></a>
-## Introduction
+## 介绍
 
-Lumen, like Laravel, is built with unit testing in mind. In fact, support for testing with PHPUnit is included out of the box, and a `phpunit.xml` file is already setup for your application.
+Lumen 在建立时就有考虑到单元测试。事实上，它支持立即使用被引入的 PHPUnit 做测试，而且已经为你的应用程序建立了 `phpunit.xml` 文件。
 
-An example test file is provided in the `tests` directory. After installing a new Lumen application, simply run `phpunit` on the command line to run your tests.
+在 `tests` 文件夹有提供一个测试例子。在安装新 Lumen 应用程序之后，只要在命令行上执行 `phpunit` 来进行测试流程。
+
 
 <a name="defining-and-running-tests"></a>
-## Defining & Running Tests
+##定义并执行测试
 
-To create a test case, simply create a new test file in the `tests` directory. The test class should extend `TestCase`. You may then define test methods as you normally would when using PHPUnit.
+要建立一个测试案例，只要在 `tests` 文件夹建立新的测试文件。测试类必须继承自 `TestCase`，接着你可以如你平常使用 PHPUnit 一般去定义测试方法。
 
-#### An Example Test Class
+#### 测试类例子
 
 	class FooTest extends TestCase {
 
@@ -32,48 +33,56 @@ To create a test case, simply create a new test file in the `tests` directory. T
 
 	}
 
-You may run all of the tests for your application by executing the `phpunit` command from your terminal.
+你可以从终端机执行 `phpunit` 命令来执行应用程序的所有测试。
 
-> **Note:** If you define your own `setUp` method, be sure to call `parent::setUp`.
+> **注意:** 如果你定义自己的 `setUp` 方法， 请记得调用 `parent::setUp`。
 
 <a name="test-environment"></a>
-## Test Environment
+## 测试环境
 
-Lumen automatically sets the cache and session drivers to `array` while in the test environment, meaning no session or cache data will be persisted while testing. You are free to create other testing environment configurations as necessary.
+当执行单元测试的时候，Laravel 会自动将环境配置成 `testing`。另外 Laravel 会在测试环境导入 `session` 和 `cache` 的配置文件。当在测试环境里这两个驱动会被配置为 `array` (空数组)，代表在测试的时候没有 session 或 cache 数据将会被保留。视情况你可以任意的建立你需要的测试环境配置。
 
-The `testing` environment variables may be configured in the `phpunit.xml` file.
+`testing` 环境的变量可以在 `phpunit.xml` 文件中配置。
 
 <a name="calling-routes-from-tests"></a>
-## Calling Routes From Tests
+## 从测试调用路由
 
-#### Calling A Route From A Test
+#### 从单一测试中调用路由
 
-You may easily call one of your routes for a test using the `call` method:
+你可以使用 `call` 方法，轻易地调用你的任何一个路由来测试：
 
 	$response = $this->call('GET', 'user/profile');
 
-	$response = $this->call(
-		$method, $uri, $parameters, $cookies, $files, $server, $content
-	);
+	$response = $this->call($method, $uri, $parameters, $cookies, $files, $server, $content);
 
-You may then inspect the `Illuminate\Http\Response` object:
+接着你可以检查 `Illuminate\Http\Response` 对象：
 
 	$this->assertEquals('Hello World', $response->getContent());
 
-The `getContent` method will return the evaluated string contents of the response. If your route returns a `View`, you may access it using the `original` property:
+#### 从测试调用控制器
+
+你也可以从测试调用控制器：
+
+	$response = $this->action('GET', 'HomeController@index');
+
+	$response = $this->action('GET', 'UserController@profile', ['user' => 1]);
+
+> **注意:** 当使用 `action` 方法的时候，你不需要指定完整的控制器命名空间。只需要指定 `App\Http\Controllers` 命名空间后面的类名称部分。
+
+`getContent` 方法会返回求值后的字串内容响应。如果你的路由返回一个 `View`，你可以通过 `original` 属性访问它：
 
 	$view = $response->original;
 
 	$this->assertEquals('John', $view['name']);
 
-To call a HTTPS route, you may use the `callSecure` method:
+你可以使用 `callSecure` 方法去调用 HTTPS 路由：
 
 	$response = $this->callSecure('GET', 'foo/bar');
 
 <a name="mocking-facades"></a>
-## Mocking Facades
+## 模拟 Facades
 
-When testing, you may often want to mock a call to a static facade. For example, consider the following controller action:
+当测试的时候，你或许常会想要模拟调用 Laravel 静态 facade。举个例子，思考下面的控制器行为：
 
 	public function getIndex()
 	{
@@ -82,9 +91,9 @@ When testing, you may often want to mock a call to a static facade. For example,
 		return 'All done!';
 	}
 
-We can mock the call to the `Event` class by using the `shouldReceive` method on the facade, which will return an instance of a [Mockery](https://github.com/padraic/mockery) mock.
+我们可以在 facade 上使用 `shouldReceive` 方法，来模拟调用 `Event` 类，它将会返回一个 [Mockery](https://github.com/padraic/mockery) mock 对象实例。
 
-#### Mocking A Facade
+#### 模拟 Facade
 
 	public function testGetIndex()
 	{
@@ -93,14 +102,14 @@ We can mock the call to the `Event` class by using the `shouldReceive` method on
 		$this->call('GET', '/');
 	}
 
-> **Note:** You should not mock the `Request` facade. Instead, pass the input you desire into the `call` method when running your test.
+> **注意:** 你不应该模拟 `Request` facade。取而代之，当执行你的测试，传递想要的输入数据进去 `call` 方法。
 
 <a name="framework-assertions"></a>
-## Framework Assertions
+## 框架 Assertions
 
-Lumen, like Laravel, ships with several `assert` methods to make testing a little easier:
+Laravel 附带几个 `assert` 方法，让测试更简单一点：
 
-#### Asserting Responses Are OK
+#### Assert 响应为 OK
 
 	public function testMethod()
 	{
@@ -109,11 +118,11 @@ Lumen, like Laravel, ships with several `assert` methods to make testing a littl
 		$this->assertResponseOk();
 	}
 
-#### Asserting Response Statuses
+#### Assert 响应的状态码
 
 	$this->assertResponseStatus(403);
 
-#### Asserting Responses Are Redirects
+#### Assert 响应为重定向
 
 	$this->assertRedirectedTo('foo');
 
@@ -121,7 +130,7 @@ Lumen, like Laravel, ships with several `assert` methods to make testing a littl
 
 	$this->assertRedirectedToAction('Controller@method');
 
-#### Asserting A View Has Some Data
+#### Assert 响应的视图包含一些数据
 
 	public function testMethod()
 	{
@@ -131,7 +140,7 @@ Lumen, like Laravel, ships with several `assert` methods to make testing a littl
 		$this->assertViewHas('age', $value);
 	}
 
-#### Asserting The Session Has Some Data
+#### Assert Session 包含一些数据
 
 	public function testMethod()
 	{
@@ -141,7 +150,7 @@ Lumen, like Laravel, ships with several `assert` methods to make testing a littl
 		$this->assertSessionHas('age', $value);
 	}
 
-#### Asserting The Session Has Errors
+#### Assert Session 有错误信息
 
 	public function testMethod()
 	{
@@ -156,7 +165,7 @@ Lumen, like Laravel, ships with several `assert` methods to make testing a littl
  		$this->assertSessionHasErrors(['name', 'age']);
 	}
 
-#### Asserting Old Input Has Some Data
+#### Assert 旧输入内容有一些数据
 
 	public function testMethod()
 	{
@@ -166,33 +175,35 @@ Lumen, like Laravel, ships with several `assert` methods to make testing a littl
 	}
 
 <a name="helper-methods"></a>
-## Helper Methods
+## 辅助方法
 
-The `TestCase` class contains several helper methods to make testing your application easier.
+`TestCase` 类包含几个辅助方法让应用程序的测试更为简单。
 
-#### Setting And Flushing Sessions From Tests
+#### 从测试里配置和刷新 Sessions
 
 	$this->session(['foo' => 'bar']);
 
 	$this->flushSession();
 
-#### Setting The Currently Authenticated User
+#### 配置目前为通过身份验证的用户
 
-You may set the currently authenticated user using the `be` method:
+你可以使用 `be` 方法配置目前为通过身份验证的用户：
 
 	$user = new User(['name' => 'John']);
 
 	$this->be($user);
 
-You may re-seed your database from a test using the `seed` method:
+你可以从测试中使用 `seed` 方法重新填充你的数据库：
 
-#### Re-Seeding Database From Tests
+#### 在测试中重新填充数据库
 
 	$this->seed();
 
 	$this->seed('DatabaseSeeder');
 
-<a name="refreshing-the-application"></a>
-## Refreshing The Application
+更多建立填充数据的信息可以在文档的 [迁移与数据填充](/docs/migrations#database-seeding) 部分找到。
 
-As you may already know, you can access your Application ([service container](/docs/container)) via `$this->app` from any test method. This service container instance is refreshed for each test class. If you wish to manually force the Application to be refreshed for a given method, you may use the `refreshApplication` method from your test method. This will reset any extra bindings, such as mocks, that have been placed in the service container since the test case started running.
+<a name="refreshing-the-application"></a>
+## 重置应用程序
+
+你可能已经知道，你可以通过 `$this->app` 在任何测试方法中访问你的([应用程序服务容器](/docs/5.0/container))。这个服务容器会在每个测试类被重置。如果你希望在给定的方法手动强制重置应用程序，你可以从你的测试方法使用 `refreshApplication` 方法。这将会重置任何额外的绑定，例如那些从测试案例执行开始被放到 IoC 容器的 mocks。
