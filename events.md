@@ -1,27 +1,27 @@
-# Events
+# 事件
 
-- [Basic Usage](#basic-usage)
-- [Queued Event Handlers](#queued-event-handlers)
-- [Event Subscribers](#event-subscribers)
-
+- [基本用法](#basic-usage)
+- [事件处理队列](#queued-event-handlers)
+- [事件订阅者](#event-subscribers)
+ 
 <a name="basic-usage"></a>
-## Basic Usage
+## 基本用法
 
-The Lumen and Laravel event facilities provides a simple observer implementation, allowing you to subscribe and listen for events in your application.
+Lumen 的事件功能简单的使用观察者模式实现, 允许你订阅或者监听应用里面发生的事件. 
 
-#### Subscribing To An Event
+#### 订阅事件
 
-> **Note:** If you intend to use the `Event` facade, be sure to uncomment the `$app->withFacades()` call in your `bootstrap/app.php` file.
+> **Note:** 如果你想使用 `Event` facade 的话, 请在 `bootstrap/app.php` 文件里面把 `$app->withFacades()`去掉注释. 
 
-To subscribe to an event, you may use the `Event::listen` method:
+使用此方法 `Event::listen` 来订阅事件: 
 
 	Event::listen(
 		'PodcastWasPurchased', 'EmailPurchaseConfirmation@handle'
 	);
 
-> **Note:** You may place these event registrations in a [service provider](/docs/providers).
+> **Note:** 你可以把事件注册都写到 [服务提供者](/docs/providers) 文件里面.
 
-When the event is fired, the event object will be passed to the `handle` method of the listener:
+当一个事件触发的时候, 事件对象会把调用监听者的  `handle`  方法: 
 
 	class EmailPurchaseConfirmation {
 
@@ -32,31 +32,31 @@ When the event is fired, the event object will be passed to the `handle` method 
 
 	}
 
-Of course, you are free to place your event and listener classes wherever you want in your application, such as an `app/Events` directory.
+你可以把监听者的类放在任何位置, 如统一放到 `app/Events`  文件夹里面.
 
-#### Firing An Event
+#### 触发事件
 
-Now we are ready to fire our event using the `Event` facade:
+现在我们准备好使用 `Event` facade 触发我们的事件：
 
 	$response = Event::fire(new PodcastWasPurchased($podcast));
 
-The `fire` method returns an array of responses that you can use to control what happens next in your application.
+`fire` 方法返回一个响应的数组，让你可以用来控制你的应用程序接下来要有什么反应。
 
-You may also use the `event` helper to fire an event:
+你也可以使用 `event` 辅助方法来触发事件:
 
 	event(new PodcastWasPurchased($podcast));
 
-#### Closure Listeners
+#### 监听器闭包
 
-You can even listen to events without creating a separate handler class at all. For example, in the `register` method of a [service provider](/docs/providers), you could do the following:
+你甚至可以不需对事件建立对应的处理类。举个例子，在你的 `EventServiceProvider` 的 `boot` 方法里，你可以做下面这件事：
 
 	Event::listen('App\Events\PodcastWasPurchased', function($event) {
 		// Handle the event...
 	});
 
-#### Stopping The Propagation Of An Event
+#### 停止继续传递事件
 
-Sometimes, you may wish to stop the propagation of an event to other listeners. You may do so using by returning `false` from your handler:
+有时候你会希望停止继续传递事件到其他监听器。你可以通过从处理程序返回 `false` 来做到这件事：
 
 	Event::listen('App\Events\PodcastWasPurchased', function($event) {
 		// Handle the event...
@@ -65,9 +65,9 @@ Sometimes, you may wish to stop the propagation of an event to other listeners. 
 	});
 
 <a name="queued-event-handlers"></a>
-## Queued Event Handlers
+## 事件处理队列
 
-If you would like your event listener to be [queued](/docs/queues), you may mark it with the `Illuminate\Contracts\Queue\ShouldBeQueued` interface:
+需要把事件处理程序放到 [队列](/docs/queues) 里面吗？你可以使用 `Illuminate\Contracts\Queue\ShouldBeQueued` 接口来标识出来: 
 
 	use Illuminate\Contracts\Queue\ShouldBeQueued;
 
@@ -80,11 +80,11 @@ If you would like your event listener to be [queued](/docs/queues), you may mark
 
 	}
 
-That's it! Now when this listener is called for an event, it will be queued automatically by the event dispatcher.
+下次当某个事件被触发的时候, 监听器就会被自动加载到事件分发器里面去了. 
 
-> **Note:** Of course, you will need to configure your [queue settings](/docs/queues) before using this feature.
+> **Note:**当然, 你需要配置 [队列设置](/docs/queues) 才能使用此功能.
 
-If no exceptions are thrown when the handler is executed by the queue, the queued job will be deleted automatically after it has processed. If you need to access the queued job's `delete` and `release` methods manually, you may do so. The `Illuminate\Queue\InteractsWithQueue` trait, which is included by default on queued handlers, gives you access to these methods:
+当处理程序被队列执行，如果没有异常被丢出，在执行后该队列中的任务将会自动被删除。你也可以手动取用队列中的任务的 `delete` 和 `release` 方法。队列处理程序默认会引入的 `Illuminate\Queue\InteractsWithQueue` trait，让你可以取用这些方法: 
 
 	public function handle(PodcastWasPurchased $event)
 	{
