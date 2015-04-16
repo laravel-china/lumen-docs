@@ -9,7 +9,7 @@
     - [中间件](/docs/middleware)
     - [控制器](/docs/controllers)
     - [请求](/docs/requests)
-    - [回应](/docs/responses)
+    - [响应](/docs/responses)
     - [视图](/docs/views)
 - 框架架构知识
     - [服务供应者](/docs/providers)
