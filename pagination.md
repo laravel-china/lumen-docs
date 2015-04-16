@@ -1,43 +1,41 @@
-# Pagination
+# 分页
 
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Appending To Pagination URLs](#appending-to-pagination-urls)
-- [Converting To JSON](#converting-to-json)
+- [配置](#configuration)
+- [使用](#usage)
+- [追加分页链接](#appending-to-pagination-links)
+- [转换至 JSON](#converting-to-json)
 
 <a name="configuration"></a>
-## Configuration
+## 配置
 
-In other frameworks, pagination can be very painful. Lumen and Laravel makes it a breeze. Lumen can generate an intelligent "range" of links based on the current page. The generated HTML is compatible with the Bootstrap CSS framework.
+在其他的框架中，实现分页是令人感到苦恼的事，但是 Lumen 令它实现起来变得轻松。 Lumen 可以产生基于当前页面的智能「范围」链接，所产生的 HTML 兼容 Bootstrap CSS 框架.
 
-Of course, if you are building a JSON API, the paginator will generate a useful JSON response, including URLs to the previous and next "page".
+当然, 如果你在开发 JSON API 接口的话, 分页器还可以给你非常有用的 JSON 返回, 包括上一页下一页的数据接口 URL 信息. 
 
 <a name="usage"></a>
-## Usage
+## 使用
 
-There are several ways to paginate items. The simplest is by using the `paginate` method on the query builder or an Eloquent model.
+有几种方法来分页对象。最简单的是在搜索构建器使用 `paginate` 方法或 Eloquent 模型。
 
-#### Paginating Database Results
+#### 对数据库结果分页
 
 	$users = DB::table('users')->paginate(15);
 
-> **Note:** Currently, pagination operations that use a `groupBy` statement cannot be executed efficiently by Lumen and Laravel. If you need to use a `groupBy` with a paginated result set, it is recommended that you query the database and create a paginator manually.
+> **注意：** 目前 Lumen 使用 `groupBy` 来做分页操作无法有效率的执行，如果您需要使用 `groupBy` 来分页数据集，建议您手动查找数据库，并使用 `Paginator::make`。
 
-#### Creating A Paginator Manually
+#### 手动建立分页
 
-Sometimes you may wish to create a pagination instance manually, passing it an array of items. You may do so by creating either an `Illuminate\Pagination\Paginator` or `Illuminate\Pagination\LengthAwarePaginator` instance, depending on your needs.
+有的时候您可能会想要从数组中对象手动建立分页实体， 您可以根据您的需要通过 `Illuminate\Pagination\Paginator` 或 `Illuminate\Pagination\LengthAwarePaginator` 实体来建立。
 
-#### Paginating An Eloquent Model
+#### 对 Eloquent 模型分页
 
-You may also paginate [Eloquent](http://laravel.com/docs/master/eloquent) models:
+您也可以对 [Eloquent](http://laravel-china.org/docs/5.0/eloquent) 模型分页:
 
 	$allUsers = User::paginate(15);
 
 	$someUsers = User::where('votes', '>', 100)->paginate(15);
 
-The argument passed to the `paginate` method is the number of items you wish to display per page. Once you have retrieved the results, you may simply return them from your route / controller. The results will automatically be converted to JSON.
-
-You may also display the results in your view. Create the pagination links using the `render` method:
+发送给 `paginate` 方法的参数是您希望每页要显示的对象选项数目，只要您取得查找结果后，您可以在视图中显示，并使用 `render` 方法去建立分页链接：
 
 	<div class="container">
 		@foreach ($users as $user)
@@ -47,7 +45,7 @@ You may also display the results in your view. Create the pagination links using
 
 	{!! $users->render() !!}
 
-You may also access additional pagination information via the following methods on the paginator:
+您也可以通过以下方法获得额外的分页信息：
 
 - `currentPage`
 - `lastPage`
@@ -58,42 +56,43 @@ You may also access additional pagination information via the following methods 
 - `total`
 - `count`
 
-#### "Simple Pagination"
+#### 「简单分页」
 
-If you do not need to inform the user how many "total" items you are paginating, you have the option of using the `simplePaginate` method to perform a more efficient query. This is useful for larger datasets:
+如果您只是要在您的分页视图显示「上一页」和「下一页」链接，您有个选项 `simplePaginate` 方法来执行更高效率的搜索。当您不需要精准的显示页码在视图上时，这个方法在较大的数据集非常有用：
 
 	$someUsers = User::where('votes', '>', 100)->simplePaginate(15);
 
-#### Customizing The Paginator URI
+#### 自定义分页 URL
 
-You may also customize the URI used by the paginator via the `setPath` method:
+您还可以透过 `setPath` 方法自定义使用的 URL：
 
 	$users = User::paginate();
 
 	$users->setPath('custom/url');
 
-The example above will create URLs like the following: http://example.com/custom/url?page=2
+
+上面的例子将建立 URL，类似以下内容：http://example.com/custom/url?page=2
 
 <a name="appending-to-pagination-urls"></a>
-## Appending To Pagination URLs
+## 追加分页链接
 
-You can add to the query string of pagination links using the `appends` method on the Paginator:
+您可以使用 `appends` 方法增加搜索字串到分页链接中：
 
 	$users->appends(['sort' => 'votes']);
 
-This will generate URLs that look something like this:
+这样会产生类似下列的链接：
 
 	http://example.com/something?page=2&sort=votes
 
-If you wish to append a "hash fragment" to the paginator's URLs, you may use the `fragment` method:
+如果您想要将「哈希片段」加到分页的 URL，您可以使用 `fragment` 方法：
 
 	$users->fragment('foo');
 
-This method call will generate URLs that look something like this:
+此方法调用后将产生 URL，看起来像这样：
 
 	http://example.com/something?page=2#foo
 
 <a name="converting-to-json"></a>
-## Converting To JSON
+##  转换至 JSON
 
-The `Paginator` class implements the `Illuminate\Contracts\Support\JsonableInterface` contract and exposes the `toJson` method. You may also convert a `Paginator` instance to JSON by returning it from a route. The JSON'd form of the instance will include some "meta" information such as `total`, `current_page`, and `last_page`. The instance's data will be available via the `data` key in the JSON array.
+`Paginator` 类实现 `Illuminate\Contracts\Support\JsonableInterface` 接口的 `toJson` 方法。由路由返回的值，您可能将 `Paginator` 实体传换成 JSON。JSON 表单的实体会包含一些「元」信息，例如 `total`、`current_page`、`last_page`。该实体数据将可通过在 JSON 数组中 `data` 的键取得。
