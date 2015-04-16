@@ -1,15 +1,15 @@
-# HTTP Responses
+# HTTP 响应
 
-- [Basic Responses](#basic-responses)
-- [Redirects](#redirects)
-- [Other Responses](#other-responses)
+- [基本响应](#basic-responses)
+- [重定向](#redirects)
+- [其他响应](#other-responses)
 
 <a name="basic-responses"></a>
-## Basic Responses
+## 基础响应
 
-#### Returning Strings From Routes
+#### 从路由返回字串
 
-The most basic response from a Lumen route is a string:
+最基本的响应就是从 Laravel 的路由返回字串：
 
 	$app->get('/', function() {
 		return 'Hello World';
@@ -17,88 +17,88 @@ The most basic response from a Lumen route is a string:
 
 #### Creating Custom Responses
 
-However, for most routes and controller actions, you will be returning a full `Illuminate\Http\Response` instance or a [view](/docs/views). Returning a full `Response` instance allows you to customize the response's HTTP status code and headers. A `Response` instance inherits from the `Symfony\Component\HttpFoundation\Response` class, providing a variety of methods for building HTTP responses:
+但是以大部分的路由及控制器所执行的动作来说，你需要返回完整的 `Illuminate\Http\Response` 实例或是一个[视图](/docs/views)。返回一个完整的 `Response` 实例时，你能够自定义响应的 HTTP 状态码以及响应头。`Response` 实例继承了 `Symfony\Component\HttpFoundation\Response` 类，它提供了很多方法来建立 HTTP 响应。
 
 	use Illuminate\Http\Response;
 
 	return (new Response($content, $status))
 	              ->header('Content-Type', $value);
 
-For convenience, you may also use the `response` helper:
+为了方便起见，你可以使用辅助方法 `response`：
 
 	return response($content, $status)
 	              ->header('Content-Type', $value);
 
-> **Note:** For a full list of available `Response` methods, check out its [API documentation](http://laravel.com/api/master/Illuminate/Http/Response.html) and the [Symfony API documentation](http://api.symfony.com/2.6/Symfony/Component/HttpFoundation/Response.html).
+> **提示：** 有关 `Response` 方法的完整列表可以参照 [API 文档](http://laravel.com/api/5.0/Illuminate/Http/Response.html) 以及 [Symfony API 文档](http://api.symfony.com/2.5/Symfony/Component/HttpFoundation/Response.html).
 
 <a name="redirects"></a>
-## Redirects
+## 重定向
 
-Redirect responses are typically instances of the `Illuminate\Http\RedirectResponse` class, and contain the proper headers needed to redirect the user to another URL.
+重定向响应通常是类 `Illuminate\Http\RedirectResponse` 的实例，并且包含用户要重定向至另一个 URL 所需的响应头。
 
-#### Returning A Redirect
+#### 返回重定向
 
-There are several ways to generate a `RedirectResponse` instance. The simplest method is to use the `redirect` helper method. When testing, it is not common to mock the creation of a redirect response, so using the helper method is almost always acceptable:
+有几种方法可以产生 `RedirectResponse` 的实例，最简单的方式就是透过辅助方法 `redirect`。当在测试时，建立一个模拟重定向响应的测试并不常见，所以使用辅助方法通常是可行的：
 
 	return redirect('user/login');
 
-#### Returning A Redirect With Flash Data
+#### 返回重定向并且加上快闪数据（ Flash Data ）
 
-> **Note:** Before using flash data, you must [enable sessions](/docs/session#session-usage).
+> **Note:** 你需要开启 [会话](/docs/session#session-usage) 来使用功能.
 
-Redirecting to a new URL and [flashing data to the session](/docs/session) are typically done at the same time. So, for convenience, you may create a `RedirectResponse` instance **and** flash data to the session in a single method chain:
+通常重定向至新的 URL 时会一并将[数据存进一次性 Session](/docs/5.0/session)。所以为了方便，你可以利用方法连接的方式创建一个 `RedirectResponse` 的实例**并**将数据存进一次性 Session：
 
 	return redirect('user/login')->with('message', 'Login Failed');
 
-#### Redirecting To The Previous URL
+#### 返回根据前一个 URL 的重定向
 
-You may wish to redirect the user to their previous location, for example, after a form submission. You can do so by using the `back` method:
+你可能希望将用户重定向至前一个位置，例如当表单提交之后。你可以使用 `back` 方法来达成这个目的：
 
 	return redirect()->back();
 
 	return redirect()->back()->withInput();
 
-#### Returning A Redirect To A Named Route
+#### 返回根据路由名称的重定向
 
-When you call the `redirect` helper with no parameters, an instance of `Illuminate\Routing\Redirector` is returned, allowing you to call any method on the `Redirector` instance. For example, to generate a `RedirectResponse` to a named route, you may use the `route` method:
+当你调用辅助方法 `redirect` 且不带任何参数时，将会返回 `Illuminate\Routing\Redirector` 的实例，你可以对该实例调用任何的方法。举个例子，要产生一个 `RedirectResponse` 到一个路由名称，你可以使用 `route` 方法：
 
 	return redirect()->route('login');
 
-#### Returning A Redirect To A Named Route With Parameters
+#### 返回根据路由名称的重定向，并给予路由参数赋值
 
-If your route has parameters, you may pass them as the second argument to the `route` method.
+如果你的路由有参数，你可以放进 `route` 方法的第二个参数。
 
 	// For a route with the following URI: profile/{id}
 
 	return redirect()->route('profile', ['id' => 1]);
 
-If you are redirecting to a route with an "ID" parameter that is being populated from an Eloquent model, you may simply pass the model itself. The ID will be extracted automatically:
+如果你要重定向至路由且路由的参数为 Eloquent 模型的「ID」，你可以直接将模型传入，ID 将会自动被提取：
 
 	return redirect()->route('profile', ['id' => $user]);
 
-#### Returning A Redirect To A Named Route Using Named Parameters
+#### 返回根据路由名称的重定向，并给予特定名称路由参数赋值
 
 	// For a route with the following URI: profile/{user}
 
 	return redirect()->route('profile', ['user' => 1]);
 
 <a name="other-responses"></a>
-## Other Responses
+## 其他响应
 
-The `response` helper may be used to conveniently generate other types of response instances.
+使用辅助方法 `response` 可以轻松的产生其他类型的响应实例。
 
-#### Creating A JSON Response
+#### 建立 JSON 响应
 
-The `json` method will automatically set the `Content-Type` header to `application/json`:
+`json` 方法会自动将响应头的 `Content-Type` 配置为 `application/json`：
 
 	return response()->json(['name' => 'Abigail', 'state' => 'CA']);
 
-#### Creating A JSONP Response
+#### 建立 JSONP 响应
 
 	return response()->json(['name' => 'Abigail', 'state' => 'CA'])
 	                 ->setCallback($request->input('callback'));
 
-#### Creating A File Download Response
+#### 建立文件下载的响应
 
 	return response()->download($pathToFile);
 
@@ -106,4 +106,4 @@ The `json` method will automatically set the `Content-Type` header to `applicati
 
 	return response()->download($pathToFile)->deleteFileAfterSend(true);
 
-> **Note:** Symfony HttpFoundation, which manages file downloads, requires the file being downloaded to have an ASCII file name.
+> **提醒：**管理文件下载的扩展包，Symfony HttpFoundation，要求下载文件名必须为 ASCII。
