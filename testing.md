@@ -40,7 +40,7 @@ Lumen 在建立时就有考虑到单元测试。事实上，它支持立即使�
 <a name="test-environment"></a>
 ## 测试环境
 
-当执行单元测试的时候，Laravel 会自动将环境配置成 `testing`。另外 Laravel 会在测试环境导入 `session` 和 `cache` 的配置文件。当在测试环境里这两个驱动会被配置为 `array` (空数组)，代表在测试的时候没有 session 或 cache 数据将会被保留。视情况你可以任意的建立你需要的测试环境配置。
+当执行单元测试的时候，Lumen 会自动将环境配置成 `testing`。另外 Laravel 会在测试环境导入 `session` 和 `cache` 的配置文件。当在测试环境里这两个驱动会被配置为 `array` (空数组)，代表在测试的时候没有 session 或 cache 数据将会被保留。视情况你可以任意的建立你需要的测试环境配置。
 
 `testing` 环境的变量可以在 `phpunit.xml` 文件中配置。
 
@@ -82,7 +82,7 @@ Lumen 在建立时就有考虑到单元测试。事实上，它支持立即使�
 <a name="mocking-facades"></a>
 ## 模拟 Facades
 
-当测试的时候，你或许常会想要模拟调用 Laravel 静态 facade。举个例子，思考下面的控制器行为：
+当测试的时候，你或许常会想要模拟调用静态 facade。举个例子，思考下面的控制器行为：
 
 	public function getIndex()
 	{
@@ -107,7 +107,7 @@ Lumen 在建立时就有考虑到单元测试。事实上，它支持立即使�
 <a name="framework-assertions"></a>
 ## 框架 Assertions
 
-Laravel 附带几个 `assert` 方法，让测试更简单一点：
+Lumen 和 Laravel 一样， 附带几个 `assert` 方法，让测试更简单一点：
 
 #### Assert 响应为 OK
 
