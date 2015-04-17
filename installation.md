@@ -63,7 +63,7 @@ Lumen 框架有一个目录需要额外配置权限: `storage` 目录要让服�
 
 Lumen 框架通过 public/.htaccess 文件来让网址中不需要 index.php。如果你的网页服务器是使用 Apache 的话，请确认是否有开启 mod_rewrite 模块。
 
-假设 Laravel 附带的 .htaccess 文件在 Apache 无法生效的话，请尝试下面的方法：
+假设 Luemn 附带的 .htaccess 文件在 Apache 无法生效的话，请尝试下面的方法：
 
 	Options +FollowSymLinks
 	RewriteEngine On
