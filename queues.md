@@ -1,4 +1,4 @@
-# Queues
+# 队列
 
 - [配置信息](#configuration)
 - [基本用法](#basic-usage)
@@ -17,7 +17,7 @@ Lumen 支持 数据库, [Beanstalkd](http://kr.github.com/beanstalkd), [IronMQ](
 
 请在  `.env`  文件里面配置 `QUEUE_DRIVER` 参数来指定队列驱动器. 
 
-### Q队列数据表
+### 队列数据表
 
 为了能够使用 `database` 驱动，你需要建立一个数据表来保存工作。要使用一个迁移建立这个数据表，下面是表结构.
 
@@ -140,7 +140,7 @@ You may also pass an array as the third argument to the `dispatchFrom` method. T
 	]);
 
 <a name="queueing-closures"></a>
-## Queueing Closures
+## 队列闭包
 
 > **Note:** 使用队列闭包的话, 你需要安装 `jeremeamia/superclosure` (~2.0) 
 
@@ -233,11 +233,6 @@ Lumen 内含一个 Artisan 命令，它将推送到队列的工作拉来下执�
 
 <a name="failed-jobs"></a>
 ## 已失败的工作
-
-Since things don't always go as planned, sometimes your queued jobs will fail. Don't worry, it happens to the best of us! Lumen and Lumen include a convenient way to specify the maximum number of times a job should be attempted. After a job has exceeded this amount of attempts, it will be inserted into a `failed_jobs` table.
-
-The `failed_jobs` table should have a schema like the following:
-
 
 事情往往不会如你预期的一样，有时候你推送工作到队列会失败，别担心，Lumen 包含一个简单的方法去指定一个工作最多可以被执行几次，在工作被执行到一定的次数时，他将会添加至 `failed_jobs` 数据表里，下面是表结构: 
 
