@@ -1,4 +1,4 @@
-# Templates
+# 模板引擎
 
 - [Blade 模版](#blade-templating)
 - [其他 Blade 控制语法结构](#other-blade-control-structures)
@@ -6,7 +6,7 @@
 <a name="blade-templating"></a>
 ## Blade 模板
 
-Blade 是 Laravel 所提供的一个简单却又非常强大的模板引擎。不像控制器页面布局，Blade 是使用 _模板继承_(template inheritance) 和 _区块_(sections)。所有的 Blade 模板后缀名都要命名为 `.blade.php`。
+Blade 是 Laravel 所提供的一个简单却又非常强大的模板引擎，甚至在 Lumen 中也可以使用，Blade 是使用 _模板继承_(template inheritance) 和 _区块_(sections)。所有的 Blade 模板后缀名都要命名为 `.blade.php`。
 
 #### 定义一个 Blade 页面布局
 
