@@ -9,7 +9,7 @@
 <a name="configuration"></a>
 ## 配置
 
-由于 HTTP 协定是无状态（Stateless）的，所以 session 提供一种保存用户数据的方法。Laravel 支持了多种 session 后端驱动，并通过清楚、统一的 API 提供使用。也内置支持如 [Memcached](http://memcached.org)、[Redis](http://redis.io) 和数据库的后端驱动。
+由于 HTTP 协定是无状态（Stateless）的，所以 session 提供一种保存用户数据的方法。Lumen 和 Laravel 一样支持了多种 session 后端驱动，并通过清楚、统一的 API 提供使用。也内置支持如 [Memcached](http://memcached.org)、[Redis](http://redis.io) 和数据库的后端驱动。
 
 在 `.env` 文件里的 `SESSION_DRIVER`  选项可以来控制会话的驱动器, 默认情况下 Lumen 使用 `memcached` 作为缓存驱动器. 
 
