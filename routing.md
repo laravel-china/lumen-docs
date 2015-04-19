@@ -67,7 +67,7 @@
 <a name="named-routes"></a>
 ## 命名路由
 
-命名路由让你更方便于产生 URL 与重定向特定路由。您可以用 `as` 的数组键值指定名称给路由：
+命名路由让你更方便地产生 URL 与重定向特定路由。您可以用 `as` 的数组键值指定名称给路由：
 
 	$app->get('user/profile', ['as' => 'profile', function() {
 		//
