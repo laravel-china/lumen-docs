@@ -64,7 +64,7 @@ Lumen 使用 [Monolog](https://github.com/seldaek/monolog), 一个兼容 [PSR-3]
 <a name="logging"></a>
 ## 日志
 
-> **Note:** 如果你想使用 `Log` facade, 请把 `bootstrap/app.php` 文件里面的 `$app->withFacades()` 注释掉.
+> **Note:** 如果你想使用 `Log` facade, 请把 `bootstrap/app.php` 文件里面的 `$app->withFacades()` 注释去掉.
 
 Laravel 日志工具在强大的 [Monolog](http://github.com/seldaek/monolog) 函数库上提供一层简单的功能。Laravel 默认为应用程序建立每天的日志文件在 `storage/logs` 目录。你可以像这样把信息写到日志：
 
