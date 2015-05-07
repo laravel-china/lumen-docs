@@ -11,7 +11,7 @@
 
 与 Laravel 不同的是, Lumen 只使用单一的 `.env`  配置文件, 你阅读下 `.env.example` 文件, 看下有哪些选项需要配置.
 
-> **注意:** 如果你想要使用 `vlucas/phpdotenv` 库来加载你的环境变量, 请把 `bootstrap/app.php` 文件里面的 `Dotenv::load` 这个调用注释掉.
+> **注意:** 如果你想要使用 `vlucas/phpdotenv` 库来加载你的环境变量, 请把 `bootstrap/app.php` 文件里面的 `Dotenv::load` 这个调用去掉注释.
 
 <a name="after-installation"></a>
 ## 安装后的配置
@@ -31,12 +31,12 @@ Lumen 基本上不需要配置, 但是, 安装后的第一件事情是在 `.env`
 <a name="permissions"></a>
 ### 权限
 
-Lumen 框架有一个目录需要额外配置权限: `storage` 目录要让服务器有写入的权限。
+Lumen 框架有一个目录需要额外配置权限: `storage` 和 `bootstrap/cache` 目录要让服务器有写入的权限。
 
 <a name="configuration-files"></a>
 ## 配置文件
 
-默认情况下, Lumen 使用单一的 `.env` 文件来配置你的应用, 然而, 你也可以使用 `Laravel 风格` 的配置方法。只需要把 `vendor/laravel/lumen-framework/config` 文件夹下对应的配置文件复制到根目录下的 `config` 文件里面就行. 
+默认情况下, Lumen 使用单一的 `.env` 文件来配置你的应用, 然而, 你也可以使用 `Laravel 风格` 的配置方法。只需要把 `vendor/laravel/lumen-framework/config` 文件夹下对应的配置文件复制到根目录下的 `config` 文件夹里面就行. 
 
 使用这种方法, 能有更多的配置灵活度. 
 
